@@ -6,10 +6,124 @@
         xmlns:local="clr-namespace:NBMinerMonitor"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
+    <Grid Margin="0, 10, 0, 0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="30"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal">
+            <Label Content="Enter Rig IP:"/>
+            <TextBox Text="{Binding RigAddressToAdd, Mode=TwoWay}" Width="150" Margin="5, 5, 0, 5"/>
+            <Label Content=":"/>
+            <TextBox Text="{Binding RigPortToAdd, Mode=TwoWay}" Width="45" Margin="0, 5, 0, 5"/>
+
+            <Button Content="Добавить" Height="25" Margin="5, 0, 0, 0" Command="{Binding AddIpCommand}"/>
+        </StackPanel>
+
+        <DataGrid ItemsSource="{Binding GPUs}" AutoGenerateColumns="False" x:Name="mainGrid" Grid.Row="1">
+            <DataGrid.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.ContainerStyle>
+                        <Style TargetType="{x:Type GroupItem}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type GroupItem}">
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding Name}" />
+                                                <TextBlock Text="{Binding ItemCount, StringFormat=Count: {0}}" Margin="30,0,0,0" />
+                                            </StackPanel>
+                                            <ItemsPresenter />
+                                        </StackPanel>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </GroupStyle.ContainerStyle>
+                </GroupStyle>
+            </DataGrid.GroupStyle>
+            <DataGrid.Columns>
+                <!--<DataGridTextColumn Binding="{Binding Ip, Mode=OneWay}" Header="IP"/>-->
+                <DataGridTextColumn Binding="{Binding Device.Info, Mode=OneWay}" Header="Info"/>
+                <DataGridTextColumn Binding="{Binding Device.Hashrate, Mode=OneWay}">
+                    <DataGridTextColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=DataContext.HashrateHeader, FallbackValue=[Hashrate], Mode=OneWay,RelativeSource={RelativeSource AncestorType={x:Type local:MainWindow}}}" />
+                        </DataTemplate>
+                    </DataGridTextColumn.HeaderTemplate>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Device.Hashrate2, Mode=OneWay}" Header="Hashrate2"/>
+                <!--<DataGridTextColumn Binding="{Binding MinThroughoutBankRub, Converter={StaticResource mathRoundConverter}, ConverterParameter=3, Mode=OneWay}" Header="Мин.₽"/>
+                <DataGridTextColumn Binding="{Binding MaxThroughout, Converter={StaticResource mathRoundConverter}, ConverterParameter=3, Mode=OneWay}" Header="Макс."/>
+                <DataGridTextColumn Binding="{Binding MaxThroughoutBankRub, Converter={StaticResource mathRoundConverter}, ConverterParameter=3, Mode=OneWay}" Header="Макс.₽"/>
+                <DataGridTemplateColumn Header="Пара 1">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="40*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="40*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Content="{Binding R1.InputCurrency.Name, Mode=OneWay}"  HorizontalAlignment="Center"/>
+                                <Label Grid.Column="1" Content="-&gt;"  HorizontalAlignment="Center"/>
+                                <Label Grid.Column="2" Content="{Binding R1.OutputCurrency.Name, Mode=OneWay}" HorizontalAlignment="Center"/>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Пара 2">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="40*"/>
+                                    <ColumnDefinition Width="20*"/>
+                                    <ColumnDefinition Width="40*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Content="{Binding R2.InputCurrency.Name, Mode=OneWay}"  HorizontalAlignment="Center"/>
+                                <Label Grid.Column="1" Content="-&gt;"  HorizontalAlignment="Center"/>
+                                <Label Grid.Column="2" Content="{Binding R2.OutputCurrency.Name, Mode=OneWay}" HorizontalAlignment="Center"/>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Обменник 1">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Border>
+                                <Border.Background>
+                                    <SolidColorBrush Color="{Binding R1, Converter={StaticResource directionInfoColorConverter}, FallbackValue=Green}"/>
+                                </Border.Background>
+                                <Border.InputBindings>
+                                    <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding DataContext.OpenExchangeCommand, Source={markups:RootObject}}" CommandParameter="{Binding R1}" />
+                                </Border.InputBindings>
+                                <Label Content="{Binding R1.Exchange.Name, Mode=OneWay}"  HorizontalAlignment="Center"/>
+                            </Border>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Обменник 2">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Border>
+                                <Border.Background>
+                                    <SolidColorBrush Color="{Binding R2, Converter={StaticResource directionInfoColorConverter}, FallbackValue=Green}"/>
+                                </Border.Background>
+                                <Border.InputBindings>
+                                    <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding DataContext.OpenExchangeCommand, Source={markups:RootObject}}" CommandParameter="{Binding R2}" />
+                                </Border.InputBindings>
+                                <Label Content="{Binding R2.Exchange.Name, Mode=OneWay}"  HorizontalAlignment="Center"/>
+                            </Border>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Маржа" Binding="{Binding Profit, Converter={StaticResource mathRoundConverter}, ConverterParameter=3, Mode=OneWay}"/>
+                <DataGridTextColumn Header="Мин.Резерв" Binding="{Binding MinReserve, Converter={StaticResource mathRoundConverter}, ConverterParameter=3, Mode=OneWay}"/>
+                <DataGridTextColumn Header="Макс. Прибыль" Binding="{Binding MaxProfit, Converter={StaticResource mathRoundConverter}, ConverterParameter=3, Mode=OneWay}"/>
+                <DataGridTextColumn Header="Макс. Прибыль ₽"  Binding="{Binding MaxProfitBankRub, Converter={StaticResource mathRoundConverter}, ConverterParameter=3, Mode=OneWay}"/>-->
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>

@@ -5,7 +5,7 @@ using System.Globalization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace NBMinerMonitor
+namespace NBMinerMonitor.Models
 {
     public partial class StatusResponse
     {
