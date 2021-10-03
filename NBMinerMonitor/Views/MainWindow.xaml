@@ -18,7 +18,7 @@
             <Label Content=":"/>
             <TextBox Text="{Binding RigPortToAdd, Mode=TwoWay}" Width="45" Margin="0, 5, 0, 5"/>
 
-            <Button Content="Добавить" Height="25" Margin="5, 0, 0, 0" Command="{Binding AddIpCommand}"/>
+            <Button Content="Add" Height="25" Margin="5, 0, 0, 0" Command="{Binding AddIpCommand}"/>
         </StackPanel>
 
         <DataGrid ItemsSource="{Binding GPUs}" AutoGenerateColumns="False" x:Name="mainGrid" Grid.Row="1">
